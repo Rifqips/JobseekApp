@@ -48,9 +48,8 @@ public class JobsArticleAdapter extends RecyclerView.Adapter<JobsArticleAdapter.
 
         viewHolder.btnDetail.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                // Menggunakan Intent untuk memulai aktivitas baru
                 Intent intent = new Intent(context, DetailActivity.class);
-                intent.putExtra("key", article.getId()); // Mengirim data tambahan jika diperlukan
+                intent.putExtra("KEY_ID", article.getId());
                 context.startActivity(intent);
             }
         });

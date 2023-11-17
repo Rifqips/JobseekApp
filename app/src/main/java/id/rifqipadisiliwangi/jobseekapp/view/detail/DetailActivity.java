@@ -1,11 +1,18 @@
 package id.rifqipadisiliwangi.jobseekapp.view.detail;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 
 import id.rifqipadisiliwangi.jobseekapp.R;
 import id.rifqipadisiliwangi.jobseekapp.databinding.ActivityDashboardBinding;
@@ -13,6 +20,8 @@ import id.rifqipadisiliwangi.jobseekapp.databinding.ActivityDetailBinding;
 import id.rifqipadisiliwangi.jobseekapp.model.JobsItem;
 import id.rifqipadisiliwangi.jobseekapp.retrofit.ApiClient;
 import id.rifqipadisiliwangi.jobseekapp.retrofit.ApiService;
+import id.rifqipadisiliwangi.jobseekapp.viewmodel.JobsDetailViewModel;
+import id.rifqipadisiliwangi.jobseekapp.viewmodel.JobsViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -20,16 +29,15 @@ import retrofit2.Response;
 public class DetailActivity extends AppCompatActivity {
 
     ActivityDetailBinding binding;
+    private static final String TAG = "JobsRepository";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityDetailBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-        String postId = getIntent().getStringExtra("");
-        if (postId != "") {
-            getPostDetail(postId);
-        }
+        getDetail();
 
         binding.tvWebsite.setPaintFlags(binding.tvWebsite.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         binding.icBack.setOnClickListener(new View.OnClickListener() {
@@ -39,27 +47,56 @@ public class DetailActivity extends AppCompatActivity {
         });
 
     }
-    private void getPostDetail(String postId) {
-        ApiService apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
-        Call<JobsItem> call = apiService.getJobsDetailService(postId);
 
-        call.enqueue(new Callback<JobsItem>() {
-            @Override
-            public void onResponse(Call<JobsItem> call, Response<JobsItem> response) {
-                if (response.isSuccessful()) {
-                    JobsItem jobsItem = response.body();
+    private void getDetail() {
+        Intent intent = getIntent();
+        String jobsId = intent.getStringExtra("KEY_ID");
+        Log.d(TAG, "onResponse response id:: " + jobsId);
+
+        if (jobsId != "") {
+            // Inisialisasi ViewModel
+            JobsDetailViewModel viewModel = new ViewModelProvider(this).get(JobsDetailViewModel.class);
+
+            // Mendapatkan detail berdasarkan ID
+            viewModel.getDetailById(jobsId).observe(this, new Observer<JobsItem>() {
+                @Override
+                public void onChanged(JobsItem jobsItem) {
                     if (jobsItem != null) {
-
+                        if(jobsItem.getCompanyLogo() != null) {
+                            Glide.with(getApplicationContext())
+                                    .load(jobsItem.getCompanyLogo())
+                                    .into(binding.ivLogo);
+                        } else {
+                            binding.ivLogo.setImageResource(R.drawable.ic_image_default);
+                        }
+                        binding.tvJobsTitle.setText(jobsItem.getCompany());
+                        binding.tvJobsLocation.setText(jobsItem.getLocation());
+                        binding.tvWebsite.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                openChromeWithUrl(jobsItem.getCompanyUrl());
+                            }
+                        });
+                        binding.tvJobsSpesification.setText(jobsItem.getTitle());
+                        binding.tvJobsOption.setText(jobsItem.getType());
+                        binding.tvContentDescription.setText(jobsItem.getDescription());
                     }
-                } else {
-                    // Tangani respons tidak berhasil di sini
                 }
-            }
 
-            @Override
-            public void onFailure(Call<JobsItem> call, Throwable t) {
-                // Tangani kegagalan di sini
-            }
-        });
+            });
+        }
     }
+
+    private void openChromeWithUrl(String url) {
+        Uri webpage = Uri.parse(url);
+        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        } else {
+            Intent webIntent = new Intent(Intent.ACTION_VIEW, webpage);
+            startActivity(webIntent);
+        }
+    }
+
 }

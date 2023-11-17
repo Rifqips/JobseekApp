@@ -17,6 +17,7 @@ public class JobsViewModel extends AndroidViewModel {
 
         JobsRepository jobsRepository = new JobsRepository();
         this.jobsResponseLiveData = jobsRepository.getJobsService();
+
     }
 
     public LiveData<List<JobsItem>> getArticleResponseLiveData() {

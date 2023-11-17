@@ -3,7 +3,7 @@ package id.rifqipadisiliwangi.jobseekapp.viewmodel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import id.rifqipadisiliwangi.jobseekapp.model.JobsItem;
-import id.rifqipadisiliwangi.jobseekapp.repository.JobsDetailRepository;
+import id.rifqipadisiliwangi.jobseekapp.data.repository.JobsDetailRepository;
 
 public class JobsDetailViewModel extends ViewModel {
     private JobsDetailRepository repository;

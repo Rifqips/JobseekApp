@@ -1,12 +1,12 @@
-package id.rifqipadisiliwangi.jobseekapp.repository;
+package id.rifqipadisiliwangi.jobseekapp.data.repository;
 
 import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import java.util.List;
 import id.rifqipadisiliwangi.jobseekapp.model.JobsItem;
-import id.rifqipadisiliwangi.jobseekapp.retrofit.ApiClient;
-import id.rifqipadisiliwangi.jobseekapp.retrofit.ApiService;
+import id.rifqipadisiliwangi.jobseekapp.data.network.retrofit.ApiClient;
+import id.rifqipadisiliwangi.jobseekapp.data.network.retrofit.ApiService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,7 +22,7 @@ public class JobsRepository {
 
     public LiveData<List<JobsItem>> getJobsService() {
         final MutableLiveData<List<JobsItem>> data = new MutableLiveData<>();
-        apiService.getJobsService()
+        apiService.getJobsService("")
                 .enqueue(new Callback<List<JobsItem>>() {
 
                     @Override

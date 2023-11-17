@@ -8,23 +8,14 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import id.rifqipadisiliwangi.jobseekapp.R;
-import id.rifqipadisiliwangi.jobseekapp.databinding.ActivityDashboardBinding;
 import id.rifqipadisiliwangi.jobseekapp.databinding.ActivityDetailBinding;
 import id.rifqipadisiliwangi.jobseekapp.model.JobsItem;
-import id.rifqipadisiliwangi.jobseekapp.retrofit.ApiClient;
-import id.rifqipadisiliwangi.jobseekapp.retrofit.ApiService;
 import id.rifqipadisiliwangi.jobseekapp.viewmodel.JobsDetailViewModel;
-import id.rifqipadisiliwangi.jobseekapp.viewmodel.JobsViewModel;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class DetailActivity extends AppCompatActivity {
 

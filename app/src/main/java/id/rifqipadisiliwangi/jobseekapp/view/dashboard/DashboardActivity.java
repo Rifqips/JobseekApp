@@ -5,20 +5,29 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
-import id.rifqipadisiliwangi.jobseekapp.adapter.JobsArticleAdapter;
+
+import id.rifqipadisiliwangi.jobseekapp.data.network.retrofit.ApiService;
+import id.rifqipadisiliwangi.jobseekapp.view.adapter.JobsArticleAdapter;
 import id.rifqipadisiliwangi.jobseekapp.databinding.ActivityDashboardBinding;
 import id.rifqipadisiliwangi.jobseekapp.model.JobsItem;
 import id.rifqipadisiliwangi.jobseekapp.viewmodel.JobsViewModel;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DashboardActivity extends AppCompatActivity {
     ActivityDashboardBinding binding;
-    private static final String TAG = "DashboardActivity";
+    private static final String TAG = "JobsRepository";
     private JobsArticleAdapter adapter;
     private ArrayList<JobsItem> articleArrayList = new ArrayList<>();
+    private ApiService apiService;
     JobsViewModel jobsViewModel;
 
 
@@ -31,6 +40,8 @@ public class DashboardActivity extends AppCompatActivity {
         initialization();
         getJobsArticles();
         initStateFilter();
+
+
     }
 
     private void initStateFilter() {
@@ -50,6 +61,7 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
     }
+
     private void initialization() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(DashboardActivity.this);
         binding.rvJobs.setLayoutManager(layoutManager);

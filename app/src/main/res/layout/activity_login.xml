@@ -84,6 +84,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:src="@drawable/ic_eyes_visible"
+        android:layout_marginEnd="10dp"
         app:layout_constraintBottom_toBottomOf="@+id/et_password"
         app:layout_constraintEnd_toEndOf="@+id/et_password"
         app:layout_constraintTop_toTopOf="@+id/et_password" />
@@ -93,6 +94,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:visibility="gone"
+        android:layout_marginEnd="10dp"
         android:src="@drawable/ic_eyes_invisible"
         app:layout_constraintBottom_toBottomOf="@+id/et_password"
         app:layout_constraintEnd_toEndOf="@+id/et_password"

@@ -1,4 +1,4 @@
-package id.rifqipadisiliwangi.jobseekapp.retrofit;
+package id.rifqipadisiliwangi.jobseekapp.data.network.retrofit;
 
 import static id.rifqipadisiliwangi.jobseekapp.constans.AppConstant.BASE_URL;
 

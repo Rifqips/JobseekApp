@@ -6,7 +6,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import java.util.List;
 import id.rifqipadisiliwangi.jobseekapp.model.JobsItem;
-import id.rifqipadisiliwangi.jobseekapp.repository.JobsRepository;
+import id.rifqipadisiliwangi.jobseekapp.data.repository.JobsRepository;
 
 public class JobsViewModel extends AndroidViewModel {
 

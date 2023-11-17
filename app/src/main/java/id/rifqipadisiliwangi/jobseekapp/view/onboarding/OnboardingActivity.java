@@ -9,6 +9,7 @@ import android.view.View;
 import id.rifqipadisiliwangi.jobseekapp.R;
 import id.rifqipadisiliwangi.jobseekapp.databinding.ActivityDashboardBinding;
 import id.rifqipadisiliwangi.jobseekapp.databinding.ActivityOnboardingBinding;
+import id.rifqipadisiliwangi.jobseekapp.view.auth.LoginActivity;
 import id.rifqipadisiliwangi.jobseekapp.view.detail.DetailActivity;
 
 public class OnboardingActivity extends AppCompatActivity {
@@ -25,7 +26,7 @@ public class OnboardingActivity extends AppCompatActivity {
 
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent intent = new Intent(OnboardingActivity.this, DetailActivity.class);
+                Intent intent = new Intent(OnboardingActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         });

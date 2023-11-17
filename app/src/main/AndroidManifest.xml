@@ -20,19 +20,19 @@
             android:exported="false" />
         <activity
             android:name=".view.onboarding.OnboardingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".view.detail.DetailActivity"
-            android:exported="false" />
-        <activity
-            android:name=".view.dashboard.DashboardActivity"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".view.detail.DetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.dashboard.DashboardActivity"
+            android:exported="true"/>
         <activity
             android:name=".MainActivity"
             android:exported="true" />

@@ -1,12 +1,8 @@
 package id.rifqipadisiliwangi.jobseekapp.repository;
 
 import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-
-import java.util.List;
-
 import id.rifqipadisiliwangi.jobseekapp.model.JobsItem;
 import id.rifqipadisiliwangi.jobseekapp.retrofit.ApiClient;
 import id.rifqipadisiliwangi.jobseekapp.retrofit.ApiService;

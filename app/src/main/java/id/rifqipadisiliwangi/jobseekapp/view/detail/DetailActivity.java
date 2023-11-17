@@ -29,7 +29,6 @@ import retrofit2.Response;
 public class DetailActivity extends AppCompatActivity {
 
     ActivityDetailBinding binding;
-    private static final String TAG = "JobsRepository";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +50,6 @@ public class DetailActivity extends AppCompatActivity {
     private void getDetail() {
         Intent intent = getIntent();
         String jobsId = intent.getStringExtra("KEY_ID");
-        Log.d(TAG, "onResponse response id:: " + jobsId);
 
         if (jobsId != "") {
             // Inisialisasi ViewModel

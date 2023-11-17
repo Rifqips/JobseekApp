@@ -30,9 +30,26 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(view);
         initialization();
         getJobsArticles();
+        initStateFilter();
     }
 
+    private void initStateFilter() {
+        binding.icArrowFilterUp.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                binding.cvFilter.setVisibility(View.GONE);
+                binding.icArrowFilterDown.setVisibility(View.VISIBLE);
+                binding.icArrowFilterUp.setVisibility(View.GONE);
+            }
+        });
 
+        binding.icArrowFilterDown.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                binding.cvFilter.setVisibility(View.VISIBLE);
+                binding.icArrowFilterDown.setVisibility(View.GONE);
+                binding.icArrowFilterUp.setVisibility(View.VISIBLE);
+            }
+        });
+    }
     private void initialization() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(DashboardActivity.this);
         binding.rvJobs.setLayoutManager(layoutManager);

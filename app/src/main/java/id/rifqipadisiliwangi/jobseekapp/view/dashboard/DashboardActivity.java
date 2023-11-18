@@ -2,6 +2,7 @@ package id.rifqipadisiliwangi.jobseekapp.view.dashboard;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -10,80 +11,81 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
+import com.bumptech.glide.RequestManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+import id.rifqipadisiliwangi.jobseekapp.data.network.retrofit.ApiClient;
 import id.rifqipadisiliwangi.jobseekapp.data.network.retrofit.ApiService;
+import id.rifqipadisiliwangi.jobseekapp.util.GridSpace;
+import id.rifqipadisiliwangi.jobseekapp.util.JobsComparator;
+import id.rifqipadisiliwangi.jobseekapp.view.adapter.JobLoadStateAdapter;
 import id.rifqipadisiliwangi.jobseekapp.view.adapter.JobsArticleAdapter;
 import id.rifqipadisiliwangi.jobseekapp.databinding.ActivityDashboardBinding;
 import id.rifqipadisiliwangi.jobseekapp.model.JobsItem;
 import id.rifqipadisiliwangi.jobseekapp.viewmodel.JobsViewModel;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
+@AndroidEntryPoint
 public class DashboardActivity extends AppCompatActivity {
     ActivityDashboardBinding binding;
-    private static final String TAG = "JobsRepository";
-    private JobsArticleAdapter adapter;
-    private ArrayList<JobsItem> articleArrayList = new ArrayList<>();
-    private ApiService apiService;
     JobsViewModel jobsViewModel;
+    JobsArticleAdapter jobsAdapter;
+    @Inject
+    RequestManager requestManager;
 
 
+    @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityDashboardBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-        initialization();
-        getJobsArticles();
-        initStateFilter();
+        initRecyclerviewAndAdapter();
 
-
-    }
-
-    private void initStateFilter() {
-        binding.icArrowFilterUp.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                binding.cvFilter.setVisibility(View.GONE);
-                binding.icArrowFilterDown.setVisibility(View.VISIBLE);
-                binding.icArrowFilterUp.setVisibility(View.GONE);
-            }
-        });
-
-        binding.icArrowFilterDown.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                binding.cvFilter.setVisibility(View.VISIBLE);
-                binding.icArrowFilterDown.setVisibility(View.GONE);
-                binding.icArrowFilterUp.setVisibility(View.VISIBLE);
-            }
-        });
-    }
-
-    private void initialization() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(DashboardActivity.this);
-        binding.rvJobs.setLayoutManager(layoutManager);
-        binding.rvJobs.setHasFixedSize(true);
-        adapter = new JobsArticleAdapter(DashboardActivity.this, articleArrayList);
-        binding.rvJobs.setAdapter(adapter);
+        jobsAdapter = new JobsArticleAdapter(new JobsComparator(),requestManager,this);
+        // Create ViewModel
         jobsViewModel = new ViewModelProvider(this).get(JobsViewModel.class);
+        jobsViewModel.jobPagingDataFlowable.subscribe(jobsPagingData -> {
+            // submit new data to recyclerview adapter
+            jobsAdapter.submitData(getLifecycle(), jobsPagingData);
+        });
 
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private void getJobsArticles() {
-        jobsViewModel.getArticleResponseLiveData().observe(this, articleResponse -> {
-            if (articleResponse != null) {
-                binding.pbDashboard.setVisibility(View.GONE);
-                List<JobsItem> articles = articleResponse;
-                articleArrayList.addAll(articles);
-                adapter.notifyDataSetChanged();
-            } else {
-                Toast.makeText(this, "No Values", Toast.LENGTH_SHORT).show();
+    private void initRecyclerviewAndAdapter() {
+        // Create GridlayoutManger with span of count of 2
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        // Finally set LayoutManger to recyclerview
+        binding.rvJobs.setLayoutManager(gridLayoutManager);
+
+        // Add ItemDecoration to add space between recyclerview items
+        binding.rvJobs.addItemDecoration(new GridSpace(2, 20, true));
+
+        // set adapter
+        binding.rvJobs.setAdapter(
+                // This will show end user a progress bar while pages are being requested from server
+                jobsAdapter.withLoadStateFooter(
+                        // When we will scroll down and next page request will be sent
+                        // while we get response form server Progress bar will show to end user
+                        new JobLoadStateAdapter(v -> {
+                            jobsAdapter.retry();
+                        })));
+        // set Grid span to set progress at center
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                // If progress will be shown then span size will be 1 otherwise it will be 2
+                return jobsAdapter.getItemViewType(position) == JobsArticleAdapter.LOADING_ITEM ? 1 : 2;
             }
         });
+
     }
+
 
 }

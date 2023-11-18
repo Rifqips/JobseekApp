@@ -10,7 +10,12 @@ import retrofit2.http.Query;
 
 public interface  ApiService {
     @GET(CONTENT_URL)
-    Call<List<JobsItem>> getJobsService(@Query("query") String query);
+    Call<List<JobsItem>> getJobsService(
+            @Query("paginate") Boolean paginate,
+            @Query("limit") int limit,
+            @Query("page") int page,
+            @Query("query") String query
+    );
     @GET("recruitment/positions/{id}")
     Call<JobsItem> getJobsDetailService(@Path("id") String postId);
 }

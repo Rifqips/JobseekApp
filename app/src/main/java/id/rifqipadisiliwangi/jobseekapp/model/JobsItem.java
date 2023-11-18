@@ -98,4 +98,11 @@ public class JobsItem {
         return company_logo;
     }
     public void setCompanyLogo(String company_logo) {this.company_logo = company_logo; }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == null) return false;
+        if (other == this) return true;
+        return false;
+    }
 }

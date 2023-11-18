@@ -5,72 +5,66 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.paging.PagingDataAdapter;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
-import com.bumptech.glide.Glide;
-import java.util.ArrayList;
-import id.rifqipadisiliwangi.jobseekapp.R;
+import com.bumptech.glide.RequestManager;
+import org.jetbrains.annotations.NotNull;
+import id.rifqipadisiliwangi.jobseekapp.databinding.ItemJobsBinding;
 import id.rifqipadisiliwangi.jobseekapp.model.JobsItem;
 import id.rifqipadisiliwangi.jobseekapp.view.detail.DetailActivity;
 
-public class JobsArticleAdapter extends RecyclerView.Adapter<JobsArticleAdapter.ViewHolder> {
-
+public class JobsArticleAdapter extends PagingDataAdapter<JobsItem, JobsArticleAdapter.JobsViewHolder> {
+    // Define Loading ViewType
+    public static final int LOADING_ITEM = 0;
+    public static final int JOB_ITEM = 1;
     private Context context;
-    ArrayList<JobsItem> articleArrayList;
-
-    public JobsArticleAdapter(Context context, ArrayList<JobsItem> articleArrayList) {
+    RequestManager glide;
+    public JobsArticleAdapter(@NotNull DiffUtil.ItemCallback<JobsItem> diffCallback, RequestManager glide, Context context) {
+        super(diffCallback);
+        this.glide = glide;
         this.context = context;
-        this.articleArrayList = articleArrayList;
     }
 
     @NonNull
     @Override
-    public JobsArticleAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view= LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_jobs,viewGroup,false);
-        return new ViewHolder(view);
+    public JobsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new JobsViewHolder(ItemJobsBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull JobsArticleAdapter.ViewHolder viewHolder, int i) {
-        JobsItem article = articleArrayList.get(i);
-        viewHolder.tvTitle.setText(article.getTitle());
-        viewHolder.tvDescription.setText(article.getDescription());
-        if (article.getCompanyLogo() != null) {
-            Glide.with(context)
-                    .load(article.getCompanyLogo())
-                    .into(viewHolder.imgViewCover);
-        } else {
-            viewHolder.imgViewCover.setImageResource(R.drawable.ic_image_default);
+    public void onBindViewHolder(@NonNull JobsViewHolder holder, int position) {
+        JobsItem currentJobs = getItem(position);
+        // Check for null
+        if (currentJobs != null) {
+            holder.jobsItemBinding.tvJobsTitle.setText(currentJobs.getTitle());
+            holder.jobsItemBinding.tvJobsDescription.setText(currentJobs.getDescription());
+            glide.load(currentJobs.getCompanyLogo())
+                    .into(holder.jobsItemBinding.ivLogo);
+            holder.jobsItemBinding.icDetail.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, DetailActivity.class);
+                    intent.putExtra("KEY_ID", currentJobs.getId());
+                    context.startActivity(intent);
+                }
+            });
         }
-
-        viewHolder.btnDetail.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent intent = new Intent(context, DetailActivity.class);
-                intent.putExtra("KEY_ID", article.getId());
-                context.startActivity(intent);
-            }
-        });
     }
 
     @Override
-    public int getItemCount() {
-        return articleArrayList.size();
+    public int getItemViewType(int position) {
+        // set ViewType
+        return position == getItemCount() ?JOB_ITEM : LOADING_ITEM;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        private final ImageView imgViewCover;
-        private final TextView tvTitle;
-        private final TextView tvDescription;
-        private final ImageView btnDetail;
+    public class JobsViewHolder extends RecyclerView.ViewHolder {
+        ItemJobsBinding jobsItemBinding;
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            imgViewCover=(ImageView) itemView.findViewById(R.id.iv_logo);
-            tvTitle=(TextView) itemView.findViewById(R.id.tv_jobs_title);
-            tvDescription=(TextView) itemView.findViewById(R.id.tv_jobs_description);
-            btnDetail=(ImageView) itemView.findViewById(R.id.ic_detail);
+        public JobsViewHolder(@NonNull ItemJobsBinding jobsItemBinding) {
+            super(jobsItemBinding.getRoot());
+            this.jobsItemBinding = jobsItemBinding;
         }
     }
+
 }

@@ -11,33 +11,33 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class JobsDetailRepository {
-    private static final String TAG = "JobsRepository";
-    private ApiService apiService;
-
-    public JobsDetailRepository() {
-        apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
-    }
-    public LiveData<JobsItem> getDetailsService(String jobsId) {
-        final MutableLiveData<JobsItem> data = new MutableLiveData<>();
-        apiService.getJobsDetailService(jobsId)
-                .enqueue(new Callback<JobsItem>() {
-
-                    @Override
-                    public void onResponse(Call<JobsItem> call, Response<JobsItem> response) {
-
-                        if (response.body() != null) {
-                            data.setValue(response.body());
-
-                            Log.d(TAG, "onResponse response Detail:: " + response.body());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<JobsItem> call, Throwable t) {
-                        Log.d(TAG, "onResponse failure Detail:: " + t);
-                        data.setValue(null);
-                    }
-                });
-        return data;
-    }
+//    private static final String TAG = "JobsRepository";
+//    private ApiService apiService;
+//
+//    public JobsDetailRepository() {
+//        apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
+//    }
+//    public LiveData<JobsItem> getDetailsService(String jobsId) {
+//        final MutableLiveData<JobsItem> data = new MutableLiveData<>();
+//        apiService.getJobsDetailService(jobsId)
+//                .enqueue(new Callback<JobsItem>() {
+//
+//                    @Override
+//                    public void onResponse(Call<JobsItem> call, Response<JobsItem> response) {
+//
+//                        if (response.body() != null) {
+//                            data.setValue(response.body());
+//
+//                            Log.d(TAG, "onResponse response Detail:: " + response.body());
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<JobsItem> call, Throwable t) {
+//                        Log.d(TAG, "onResponse failure Detail:: " + t);
+//                        data.setValue(null);
+//                    }
+//                });
+//        return data;
+//    }
 }
